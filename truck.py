@@ -17,23 +17,22 @@ class Truck:
 
     def load(self, package):
         self.package_list.append(package)
-        self.route.append(package[1])
-
+        self.route.append(package[1]) # The address
 
     def remove(self, package):
         self.package_list.remove(package)
-        self.route.remove(package[1])
+        self.route.remove(package[1]) # The address
 
     def depart(self, time):
         for package in self.package_list:
             package.status = "EN ROUTE"
-
+        # Start time for when the truck leaves the HUB
+        # Current time will increase at every stop
         self.start_time = time
         self.current_time = time
 
-    def deliver(self, package, miles):
-        # self.remove(package)
-        self.miles += miles
+    def travel(self, miles):
+        self.miles += miles # Keep track of total miles the truck travels
         added_time = timedelta(minutes=(miles / self.speed) * 60)
         self.current_time += added_time
 
