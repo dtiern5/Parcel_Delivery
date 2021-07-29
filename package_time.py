@@ -7,7 +7,7 @@ def convert_time(time):
         datetime_object = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
         return datetime_object
     except:
-        print("Could not convert to time delta - please check for correct format 'H:mm:ss'")
+        print("Error: Time format is incorrect")
 
 
 def check_packages_by_truck(truck, time):

@@ -9,6 +9,88 @@ from package import Package
 from truck import Truck
 from undirected_graph import UndirectedGraph
 
+# TODO: Write UI
+# TODO: BIG O
+# TODO: FINISH DOCUMENT
+
+def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
+    print("WGUPS Parcel Delivery System\n"
+          "Please select an option:\n"
+          "1. Individual package status\n"
+          "2. All package statuses\n"
+          "3. Package status by truck\n"
+          "4. Truck travel distances\n"
+          "5. Number of packages in each truck\n"
+          "6. Exit application\n")
+
+    user_selection = input("Select a number: ")
+
+    if user_selection == '1':
+        package_id = int(input("Package ID number: "))
+        package_at_time = input("Time of day to display package (HH:MM:SS): ")
+        print("\nPackage status: ")
+        try:
+            print_single_package_by_time(hash_table, package_at_time, package_id)
+        except:
+            print("Package not found")
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '2':
+        time_to_check = input("Time of day to display package statuses (HH:MM:SS): ")
+        try:
+            print("\nDisplaying all packages:")
+            print_all_packages_at_time(hash_table, time_to_check)
+        except:
+            print("Correct format: (HH:MM:SS)")
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '3':
+        current_truck = None
+        truck_number = input("Which truck? (1, 2, or 3) ")
+        if truck_number == '1':
+            current_truck = truck_one
+        elif truck_number == '2':
+            current_truck = truck_two
+        elif truck_number == '3':
+            current_truck = truck_three
+        else:
+            print("Truck not found")
+            print()
+            ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+        time_to_check = input("Time of day to display package statuses (HH:MM:SS): ")
+        try:
+            check_packages_by_truck(current_truck, time_to_check)
+        except:
+            print("Correct format: (HH:MM:SS)")
+
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '4':
+        print("Truck one miles: %.2f" % truck_one.miles)
+        print("Truck two miles: %.2f" % truck_two.miles)
+        print("Truck three miles: %.2f" % truck_three.miles)
+        print("Total miles: %s" % (truck_one.miles + truck_two.miles + truck_three.miles))
+
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '5':
+        print("Truck one has %s packages" % len(truck_one.package_list))
+        print("Truck two has %s packages" % len(truck_two.package_list))
+        print("Truck three has %s packages" % len(truck_three.package_list))
+
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '6':
+        print("Exiting...")
+        quit()
+
+
 
 def loadPackagesToTrucks(filename):
     with open(filename) as wguPackages:
@@ -139,44 +221,20 @@ if __name__ == '__main__':
     truck_three = Truck('Truck 3')
     loadPackagesToTrucks('WGUPS Package File.csv')
 
-    print("WGUPS Parcel Delivery System")
-    print("")
-
-    # print(len(truck_one.package_list))
-    # print(len(truck_two.package_list))
-    # print(len(truck_three.package_list))
-
     truck_one.depart(convert_time('8:00:00'))
-    # print(truck_one.start_time)
     greedy_algo(myGraph, truck_one)
 
     truck_two.depart(convert_time('9:05:00'))
-    # print(truck_two.start_time)
     greedy_algo(myGraph, truck_two)
 
     truck_three.depart(convert_time('10:00:00'))
-    # print(truck_three.start_time)
     greedy_algo(myGraph, truck_three)
 
-
-    # print("\nTRUCK ONE PACKAGE LIST: ")
-    # for package in truck_one.package_list:
-    #     print(package)
+    ui(myHash, myGraph, truck_one, truck_two, truck_three)
     #
-    # print("\nTRUCK TWO PACKAGE LIST: ")
-    # for package in truck_two.package_list:
-    #     print(package)
-    #
-    # print("\nTRUCK Three PACKAGE LIST: ")
-    # for package in truck_three.package_list:
-    #     print(package)
-
-    # print("truck_one: ", truck_one)
-    # print("truck_two: ", truck_two)
-    # print("truck_three: ", truck_three)
     #
     # print("\ntotal miles: %.2f" % (truck_one.miles + truck_two.miles + truck_three.miles))
-
+    #
     # check_status_at_time(truck_one, '9:00:00')
     # print("\n\n")
     # check_status_at_time(truck_one, '7:00:00')
@@ -187,9 +245,8 @@ if __name__ == '__main__':
     # print("\n\n")
     # check_status_at_time(truck_one, '7:00:00')
     # print("\n\n")
-
-
-    print(print_all_packages_at_time(myHash, '9:15:00'))
-    print(print_single_package_by_time(myHash, '9:00:00', 4))
-
-    print(print_all_packages_at_time(myHash, '12:15:00'))
+    #
+    # print(print_all_packages_at_time(myHash, '9:15:00'))
+    # print(print_single_package_by_time(myHash, '9:00:00', 4))
+    #
+    # print(print_all_packages_at_time(myHash, '12:15:00'))
