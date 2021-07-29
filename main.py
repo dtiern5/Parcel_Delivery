@@ -3,12 +3,11 @@
 import csv
 from datetime import datetime, timedelta, time
 
-from package_time import check_status_at_time, convert_time
+from package_time import check_packages_by_truck, convert_time, print_all_packages_at_time, print_single_package_by_time
 from hash_table import ChainingHashTable
 from package import Package
 from truck import Truck
 from undirected_graph import UndirectedGraph
-
 
 
 def loadPackagesToTrucks(filename):
@@ -98,10 +97,10 @@ def greedy_algo(graph, truck):
         total_distance += shortest_distance
         elapsed_time = timedelta(minutes = (shortest_distance / 18) * 60)
         time += elapsed_time
-        print('elapsed_time: ', elapsed_time)
-        #print("total_distance: ", total_distance)
-        #print("shortest_distance: ", shortest_distance)
-        #print("next address: ", next_address)
+        # print('elapsed_time: ', elapsed_time)
+        # print("total_distance: ", total_distance)
+        # print("shortest_distance: ", shortest_distance)
+        # print("next address: ", next_address)
 
         visited_queue.append(next_address)
         for package in truck.package_list:
@@ -113,8 +112,8 @@ def greedy_algo(graph, truck):
 
 
     visited_queue.remove('4001 South 700 East')
-    print('\ntotal distance: ', total_distance)
-    print('total time: ', time)
+    # print('total distance: ', total_distance)
+    # print('total time: ', time)
 
     # Return to hub
     distance_to_hub = distance_list[visited_queue[-1], '4001 South 700 East']
@@ -122,22 +121,22 @@ def greedy_algo(graph, truck):
     elapsed_time = timedelta(minutes=(distance_to_hub / 18) * 60)
     time += elapsed_time
 
-    print('\ntotal distance after return: ', total_distance)
-    print('total time after return: ', time)
-    print('\n')
+    # print('\ntotal distance after return: ', total_distance)
+    # print('total time after return: ', time)
+    # print('\n')
 
     truck.finish_time = truck.current_time
     truck.status = "IN HUB"
-    print("GREEDY ROUTE: ", visited_queue)
+    # print("GREEDY ROUTE: ", visited_queue)
     return visited_queue
 
 if __name__ == '__main__':
     # Create a chaining hash table for the packages
     myHash = ChainingHashTable()
     myGraph = createDistanceGraph('WGUPS Distance Table.csv')
-    truck_one = Truck('Truck One')
-    truck_two = Truck('Truck Two')
-    truck_three = Truck('Truck Three')
+    truck_one = Truck('Truck 1')
+    truck_two = Truck('Truck 2')
+    truck_three = Truck('Truck 3')
     loadPackagesToTrucks('WGUPS Package File.csv')
 
     print("WGUPS Parcel Delivery System")
@@ -178,13 +177,19 @@ if __name__ == '__main__':
     #
     # print("\ntotal miles: %.2f" % (truck_one.miles + truck_two.miles + truck_three.miles))
 
-    check_status_at_time(truck_one, '9:00:00')
-    print("\n\n")
-    check_status_at_time(truck_one, '7:00:00')
-    print("\n\n")
-    check_status_at_time(truck_one, '12:00:00')
-    print("\n\n")
-    check_status_at_time(truck_one, '9:00:00')
-    print("\n\n")
-    check_status_at_time(truck_one, '7:00:00')
-    print("\n\n")
+    # check_status_at_time(truck_one, '9:00:00')
+    # print("\n\n")
+    # check_status_at_time(truck_one, '7:00:00')
+    # print("\n\n")
+    # check_status_at_time(truck_one, '12:00:00')
+    # print("\n\n")
+    # check_status_at_time(truck_one, '9:00:00')
+    # print("\n\n")
+    # check_status_at_time(truck_one, '7:00:00')
+    # print("\n\n")
+
+
+    print(print_all_packages_at_time(myHash, '9:15:00'))
+    print(print_single_package_by_time(myHash, '9:00:00', 4))
+
+    print(print_all_packages_at_time(myHash, '12:15:00'))
