@@ -10,15 +10,15 @@ class Package:
         self.weight = weight
         self.notes = notes
         self.preferredTruck = preferredTruck
-        self.status = 'IN HUB'
+        self.status = 'AT THE HUB'
         self.delivery_time = None
 
     def deliver(self, delivery_time):
-        self.status = 'Delivered'
+        self.status = 'DELIVERED'
         self.delivery_time = delivery_time
 
     def __str__(self):
-        return "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.address, self.city, self.state,
+        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.address, self.city, self.state,
                                                    self.zipcode, self.deadline, self.weight, self.notes,
-                                                   self.status, self.delivery_time)
+                                                   self.status)
 
