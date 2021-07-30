@@ -10,9 +10,7 @@ from truck import Truck
 from undirected_graph import UndirectedGraph
 
 
-# TODO: BIG O
 # TODO: FINISH DOCUMENT
-
 def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
     print("WGUPS Parcel Delivery System\n"
           "Please select an option:\n"
@@ -92,6 +90,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
 
 # Inserts all of the packages into a hash table
 # Time complexity: O(n)
+# Space complexity: O(n)
 def hash_packages(filename):
     with open(filename) as wguPackages:
         reader = csv.reader(wguPackages, delimiter=',')
@@ -118,6 +117,7 @@ def hash_packages(filename):
 
 # Loads packages onto trucks based on manual additions to the CSV
 # Time complexity: O(1)
+# Space complexity: O(1)
 def load_package(package):
 
     if package.truck == '1':
@@ -131,7 +131,8 @@ def load_package(package):
         truck_three.route.append(package.address)
 
 # Creates a graph with addresses as vertexes and distance between addresses as edges
-# Time complexity: O(n^2)
+# Time complexity: O(n^2) due to the nested for loops
+# Space complexity: O(n)
 def create_distance_graph(filename):
     graph = UndirectedGraph()
 
@@ -153,10 +154,10 @@ def create_distance_graph(filename):
 """
 Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
 the closest destination in miles, drops off the package, and repeats until no destinations are left. At that point, it
-returns to the hub. The time and miles travelled are updated at each stop along the route. A list of destinations
-is returned, in the order they were visited.
+returns to the hub. The time and miles travelled are updated at each stop along the route.
 """
-# Time complexity: O(n)
+# Time complexity: O(n^2)
+# Space complexity: O(n)
 def greedy_algo(graph, truck):
     # Create a list of all unvisited locations on the truck's route
     unvisited_list = []

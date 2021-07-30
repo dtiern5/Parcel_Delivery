@@ -4,6 +4,8 @@ from datetime import datetime, timedelta, time
 class Truck:
     package_list = []
 
+    # Time complexity: O(1)
+    # Space complexity: O(1)
     def __init__(self, name):
         self.name = name
         self.package_list = []
@@ -15,15 +17,20 @@ class Truck:
         self.finish_time = None
         self.status = "IN HUB"
 
+    # Time complexity: O(1)
+    # Space complexity: O(1)
     def load(self, package):
         self.package_list.append(package)
         self.route.append(package[1]) # The address
 
+    # Time complexity: O(1)
+    # Space complexity: O(1)
     def remove(self, package):
         self.package_list.remove(package)
         self.route.remove(package[1]) # The address
 
     # Time complexity: O(n)
+    # Space complexity: O(1)
     def depart(self, time):
         for package in self.package_list:
             package.status = "EN ROUTE"
@@ -32,6 +39,8 @@ class Truck:
         self.start_time = time
         self.current_time = time
 
+    # Time complexity: O(1)
+    # Space complexity: O(1)
     def travel(self, miles):
         self.miles += miles # Keep track of total miles the truck travels
         added_time = timedelta(minutes=(miles / self.speed) * 60)
