@@ -1,21 +1,23 @@
 class ChainingHashTable:
-    # Constructor with optional capacity parameter.
-    # Assigns an empty list to each bucket.
+
+    # Constructor with optional capacity parameter
+    # Assigns an empty list to each bucket
+    # Time complexity: O(n)
     def __init__(self, initial_capacity=10):
-        """
-        Time complexity: 0(N)
-        Space complexity: 0(1)
-        """
         self.table = []
         for i in range(initial_capacity):
             self.table.append([])
 
-    # Establishes the correct bucket for a given key.
+
+    # Establishes the correct bucket for a given key
+    # Time complexity: O(1)
     def _get_hash(self, key):
         bucket = hash(key) % len(self.table)
         return self.table[bucket]
 
-    # Inserts a new item into the hash table.
+
+    # Inserts a new item into the hash table
+    # Time complexity: O(n)
     def insert(self, key, item):
         # get the bucket list where the item belongs
         bucket_list = self._get_hash(key)
@@ -32,6 +34,7 @@ class ChainingHashTable:
         return True
 
     # Return the value for a given key or 'None' if the key is not found
+    # Time complexity: O(n)
     def search(self, key):
         # get the bucket list for where this item would be
         bucket_list = self._get_hash(key)
@@ -43,6 +46,7 @@ class ChainingHashTable:
         return None
 
     # Remove an item based on the parameter 'key' from the hash table.
+    # Time complexity: O(n)
     def remove(self, key):
         # get the bucket list where the item resides
         bucket_list = self._get_hash(key)

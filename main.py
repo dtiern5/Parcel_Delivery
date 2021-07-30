@@ -12,7 +12,6 @@ from undirected_graph import UndirectedGraph
 
 # TODO: BIG O
 # TODO: FINISH DOCUMENT
-
 def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
     print("WGUPS Parcel Delivery System\n"
           "Please select an option:\n"
@@ -90,6 +89,9 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         print("Exiting...")
         quit()
 
+'''
+
+'''
 def hash_packages(filename):
     with open(filename) as wguPackages:
         reader = csv.reader(wguPackages, delimiter=',')
@@ -156,8 +158,9 @@ def create_distance_graph(filename):
         for j in range(2, len(edges)): # j is each edge weight
             graph.add_undirected_edge(csv_data_array[row][1], csv_data_array[j-2][1], float(csv_data_array[row][j]))
     return graph
-'''
 
+'''
+Time Complexity: O(n)
 '''
 def greedy_algo(graph, truck):
     # Create a list of all unvisited locations on the truck's route
@@ -213,6 +216,9 @@ def greedy_algo(graph, truck):
 
     return visited_list
 
+'''
+Time Complexity: O(1)
+'''
 if __name__ == '__main__':
     myHash = ChainingHashTable() # Create a chaining hash table for the packages
     myGraph = create_distance_graph('WGUPS Distance Table.csv') #
