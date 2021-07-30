@@ -14,6 +14,13 @@ class Package:
         self.delivery_time = None
 
     def deliver(self, delivery_time):
+        """
+        Stores the delivery time of the package.
+        Also updates the status to 'DELIVERED', although this is currently redundant as
+        our current lookup function also performs this task.
+        :param delivery_time: The delivery time of the package
+        :return: None
+        """
         self.status = 'DELIVERED'
         self.delivery_time = delivery_time
 

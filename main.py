@@ -209,7 +209,7 @@ def greedy_algo(graph, truck):
     truck.finish_time = truck.current_time
     truck.status = "IN HUB"
 
-    # print("Truck finish time: ", truck.finish_time)
+    print("Truck finish time: ", truck.finish_time)
     # print("ROUTE: ", visited_list)
 
 
@@ -229,7 +229,7 @@ if __name__ == '__main__':
     truck_two.depart(convert_time('9:05:00'))
     greedy_algo(myGraph, truck_two)
 
-    truck_three.depart(convert_time('10:00:00'))
+    truck_three.depart(convert_time('11:00:00'))
     greedy_algo(myGraph, truck_three)
 
 
