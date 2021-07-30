@@ -11,9 +11,50 @@ from undirected_graph import UndirectedGraph
 
 
 # TODO: FINISH DOCUMENT
+
+def main():
+    """
+    Creates hash table, graph, and three trucks.
+    Hashes the packages and loads them to the trucks.
+    Sets each truck to depart at a given time so data can be pulled in the UI.
+    Starts the UI.
+    :return: None
+    Time Complexity for the entire application is O(n^2)
+    """
+    myHash = ChainingHashTable()  # Create a chaining hash table for the packages
+    myGraph = create_distance_graph('WGUPS Distance Table.csv')  #
+    # Create truck objects
+    truck_one = Truck('Truck 1')
+    truck_two = Truck('Truck 2')
+    truck_three = Truck('Truck 3')
+    hash_packages('WGUPS Package Data.csv', myHash, truck_one, truck_two, truck_three)
+
+    truck_one.depart(convert_time('8:00:00'))
+    greedy_algo(myGraph, truck_one)
+
+    truck_two.depart(convert_time('9:05:00'))
+    greedy_algo(myGraph, truck_two)
+
+    truck_three.depart(convert_time('10:45:00'))
+    greedy_algo(myGraph, truck_three)
+
+    ui(myHash, myGraph, truck_one, truck_two, truck_three)
+
 def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
+    """
+    Prompts the user with choices for displaying truck and package data.
+    User types the number and presses enter
+
+    :param hash_table: The hash_table containing package information
+    :param distance_graph: The graph containing addresses as vertices and distances as edges
+    :param truck_one: First truck, leaves immediately at 8:00:00
+    :param truck_two: Second truck, leaves when delayed packages arrive at 9:05:00
+    :param truck_three: Third truck, leaves after first truck returns to the hub at 10:45:00
+    :return: None
+    """
+
     print("WGUPS Parcel Delivery System\n"
-          "Please select an option:\n"
+          "Please select an option (type the number and press Enter):\n"
           "1. Individual package status\n"
           "2. All package statuses\n"
           "3. Package status by truck\n"
@@ -24,6 +65,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
     user_selection = input("Select a number: ")
 
     if user_selection == '1':
+        # Display a package's status at a chosen time
         package_id = int(input("Package ID number: "))
         package_at_time = input("Time of day to display package (HH:MM:SS): ")
         print("\nPackage status: ")
@@ -35,6 +77,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '2':
+        # Display all package statuses at a chosen time
         time_to_check = input("Time of day to display package statuses (HH:MM:SS): ")
         try:
             print("\nDisplaying all packages:")
@@ -45,6 +88,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '3':
+        # Display the chosen truck's package statuses at the chosen time
         current_truck = None
         truck_number = input("Which truck? (1, 2, or 3) ")
         if truck_number == '1':
@@ -68,15 +112,17 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '4':
+        # Display the total miles on each truck, as well as the total miles of all trucks
         print("Truck one miles: %.2f" % truck_one.miles)
         print("Truck two miles: %.2f" % truck_two.miles)
         print("Truck three miles: %.2f" % truck_three.miles)
-        print("Total miles: %s" % (truck_one.miles + truck_two.miles + truck_three.miles))
+        print("Total miles: %.2f" % (truck_one.miles + truck_two.miles + truck_three.miles))
 
         print()
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '5':
+        # Display the number of packages on each truck
         print("Truck one: %s packages" % len(truck_one.package_list))
         print("Truck two: %s packages" % len(truck_two.package_list))
         print("Truck three: %s packages" % len(truck_three.package_list))
@@ -88,10 +134,21 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         print("Exiting...")
         quit()
 
-# Inserts all of the packages into a hash table
-# Time complexity: O(n)
-# Space complexity: O(n)
-def hash_packages(filename):
+def hash_packages(filename, hash_table, truck_one, truck_two, truck_three):
+    """
+    Inserts all packages into a hash table by first creating a package object from each line
+    of the CSV, then calling the hash table's insert function using the package ID as the key.
+    Also calls the load_package function to place the package in the correct truck
+
+    :param filename: The CSV to retrieve packages data from
+    :param hash_table: The hash table to store the package data
+    :param truck_one: First truck
+    :param truck_two: Second truck
+    :param truck_three: Third truck
+    :return: None
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+    """
     with open(filename) as wguPackages:
         reader = csv.reader(wguPackages, delimiter=',')
 
@@ -110,15 +167,21 @@ def hash_packages(filename):
                 package = Package(pId, pAddress, pCity, pState, pZip, pDeadline, pWeight, pNotes, pTruck)
 
                 # Insert it into the hash table
-                myHash.insert(pId, package)
+                hash_table.insert(pId, package)
 
                 # Load package onto truck (manually for now)
-                load_package(package)
+                load_package(package, truck_one, truck_two, truck_three)
 
-# Loads packages onto trucks based on manual additions to the CSV
-# Time complexity: O(1)
-# Space complexity: O(1)
-def load_package(package):
+def load_package(package, truck_one, truck_two, truck_three):
+    """
+    Loads a package onto the trucks based on the manually added column 9 in the CSV
+    :param package: The package to laod
+    :param truck_one: First truck
+    :param truck_two: Second truck
+    :param truck_three: Third truck
+    :return: None
+    Time Complexity: O(1)
+    """
 
     if package.truck == '1':
         truck_one.package_list.append(package)
@@ -130,35 +193,45 @@ def load_package(package):
         truck_three.package_list.append(package)
         truck_three.route.append(package.address)
 
-# Creates a graph with addresses as vertexes and distance between addresses as edges
-# Time complexity: O(n^2) due to the nested for loops
-# Space complexity: O(n)
 def create_distance_graph(filename):
+    """
+    Creates and returns a graph object with addresses as vertices and distances between addresses as edges.
+    :param filename: CSV of the distance table containing addresses and distances.
+    :return: A graph object derived from the given CSV
+    Time complexity: O(n^2) due to the nested for loops
+    Space complexity: O(n)
+    """
     graph = UndirectedGraph()
 
-    csv_data_array = []
+    csv_data_list = []
     with open(filename) as f:
         reader = csv.reader(f)
         next(reader) # Skip header
         for line in reader:
-            csv_data_array.append(line)
+            csv_data_list.append(line)
 
-    for line in csv_data_array:
+    for line in csv_data_list:
         graph.add_vertex(line[1]) # Vertex is the address
-    for row in range(0, len(csv_data_array)):
-        edges = (csv_data_array[row])[2:len(csv_data_array)+2]
+    for row in range(0, len(csv_data_list)):
+        edges = (csv_data_list[row])[2:len(csv_data_list)+2] # Skip the first two columns
         for j in range(2, len(edges)): # j is each edge weight
-            graph.add_undirected_edge(csv_data_array[row][1], csv_data_array[j-2][1], float(csv_data_array[row][j]))
+            # [j-2] gets us the correct row for the second address
+            graph.add_undirected_edge(csv_data_list[row][1], csv_data_list[j-2][1], float(csv_data_list[row][j]))
     return graph
 
-"""
-Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
-the closest destination in miles, drops off the package, and repeats until no destinations are left. At that point, it
-returns to the hub. The time and miles travelled are updated at each stop along the route.
-"""
-# Time complexity: O(n^2)
-# Space complexity: O(n)
 def greedy_algo(graph, truck):
+    """
+    Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
+    the closest destination in miles, drops off the package, and repeats until no destinations are left. At that point, it
+    returns to the hub. The time and miles travelled are updated at each stop along the route.
+
+    :param graph: The graph containing addresses as vertices and distances as edges
+    :param truck: The truck whose route is being planned by the greedy algorithm
+    :return: None
+    Time complexity: O(n^2) The for loop, as well as the while loop it is nested within, each loop 'n' number of times
+    based on the length truck's route
+    Space complexity: O(n)
+    """
     # Create a list of all unvisited locations on the truck's route
     unvisited_list = []
     for address in truck.route:
@@ -213,25 +286,5 @@ def greedy_algo(graph, truck):
     # print("ROUTE: ", visited_list)
 
 
-# Time Complexity: O(1)
 if __name__ == '__main__':
-    myHash = ChainingHashTable() # Create a chaining hash table for the packages
-    myGraph = create_distance_graph('WGUPS Distance Table.csv') #
-    # Create truck objects
-    truck_one = Truck('Truck 1')
-    truck_two = Truck('Truck 2')
-    truck_three = Truck('Truck 3')
-    hash_packages('WGUPS Package Data.csv')
-
-    truck_one.depart(convert_time('8:00:00'))
-    greedy_algo(myGraph, truck_one)
-
-    truck_two.depart(convert_time('9:05:00'))
-    greedy_algo(myGraph, truck_two)
-
-    truck_three.depart(convert_time('10:45:00'))
-    greedy_algo(myGraph, truck_three)
-
-
-
-    ui(myHash, myGraph, truck_one, truck_two, truck_three)
+    main()
