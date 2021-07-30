@@ -23,6 +23,7 @@ class Truck:
         self.package_list.remove(package)
         self.route.remove(package[1]) # The address
 
+    # Time complexity: O(n)
     def depart(self, time):
         for package in self.package_list:
             package.status = "EN ROUTE"

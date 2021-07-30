@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-
+# Time complexity: O(1)
 def convert_time(time):
     try:
         (h, m, s) = time.split(':')
@@ -9,7 +9,7 @@ def convert_time(time):
     except:
         print("Error: Time format is incorrect")
 
-
+# Time complexity: O(n)
 def check_packages_by_truck(truck, time):
     status_time = convert_time(time)
     for package in truck.package_list:
@@ -21,12 +21,12 @@ def check_packages_by_truck(truck, time):
             package.status = 'DELIVERED by %s at %s' % (truck.name, package.delivery_time)
         print(package)
 
-
+# Time complexity: O(1)
 def print_all_packages_at_time(hash_table, time):
     for p in range(1, 41):
         print_single_package_by_time(hash_table, time, p)
 
-
+# Time complexity: O(1)
 def print_single_package_by_time(hash_table, time, package_id):
     package = hash_table.search(package_id)
     status_time = convert_time(time)
