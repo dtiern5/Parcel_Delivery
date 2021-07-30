@@ -223,7 +223,7 @@ if __name__ == '__main__':
     truck_three = Truck('Truck 3')
     hash_packages('WGUPS Package Data.csv')
 
-    truck_one.depart(convert_time('9:05:00'))
+    truck_one.depart(convert_time('8:00:00'))
     greedy_algo(myGraph, truck_one)
 
     truck_two.depart(convert_time('9:05:00'))
