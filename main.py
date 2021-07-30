@@ -12,6 +12,7 @@ from undirected_graph import UndirectedGraph
 
 # TODO: BIG O
 # TODO: FINISH DOCUMENT
+
 def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
     print("WGUPS Parcel Delivery System\n"
           "Please select an option:\n"
@@ -89,9 +90,8 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         print("Exiting...")
         quit()
 
-'''
-
-'''
+# Inserts all of the packages into a hash table
+# Time complexity: O(n)
 def hash_packages(filename):
     with open(filename) as wguPackages:
         reader = csv.reader(wguPackages, delimiter=',')
@@ -114,33 +114,24 @@ def hash_packages(filename):
                 myHash.insert(pId, package)
 
                 # Load package onto truck (manually for now)
-                #load_package(package)
+                load_package(package)
 
-                # Group packages for loading the trucks
-                if package.truck == '1':
-                    truck_one.package_list.append(package)
-                    truck_one.route.append(package.address)
-                if package.truck == '2':
-                    truck_two.package_list.append(package)
-                    truck_two.route.append(package.address)
-                if package.truck == '3':
-                    truck_three.package_list.append(package)
-                    truck_three.route.append(package.address)
+# Loads packages onto trucks based on manual additions to the CSV
+# Time complexity: O(1)
+def load_package(package):
 
-# def load_package(package):
-#
-#     # Group packages for loading the trucks
-#     if package.truck == '1':
-#         truck_one.package_list.append(package)
-#         truck_one.route.append(package.address)
-#     if package.truck == '2':
-#         truck_two.package_list.append(package)
-#         truck_two.route.append(package.address)
-#     if package.truck == '3':
-#         truck_three.package_list.append(package)
-#         truck_three.route.append(package.address)
+    if package.truck == '1':
+        truck_one.package_list.append(package)
+        truck_one.route.append(package.address)
+    if package.truck == '2':
+        truck_two.package_list.append(package)
+        truck_two.route.append(package.address)
+    if package.truck == '3':
+        truck_three.package_list.append(package)
+        truck_three.route.append(package.address)
 
-
+# Creates a graph with addresses as vertexes and distance between addresses as edges
+# Time complexity: O(n^2)
 def create_distance_graph(filename):
     graph = UndirectedGraph()
 
@@ -159,9 +150,13 @@ def create_distance_graph(filename):
             graph.add_undirected_edge(csv_data_array[row][1], csv_data_array[j-2][1], float(csv_data_array[row][j]))
     return graph
 
-'''
-Time Complexity: O(n)
-'''
+"""
+Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
+the closest destination in miles, drops off the package, and repeats until no destinations are left. At that point, it
+returns to the hub. The time and miles travelled are updated at each stop along the route. A list of destinations
+is returned, in the order they were visited.
+"""
+# Time complexity: O(n)
 def greedy_algo(graph, truck):
     # Create a list of all unvisited locations on the truck's route
     unvisited_list = []
@@ -173,52 +168,51 @@ def greedy_algo(graph, truck):
     start = '4001 South 700 East'
     visited_list = [start]
 
-    # Use our graph to
     distance_dict = graph.edge_weights # Dictionary {('address1', 'address2'): distance, ('address2', 'address1'): distance)...}
-    total_distance = 0 # Keeps track of cumulative distance the truck travels
-    time = truck.start_time
+    time = truck.start_time # Start time is chosen when the truck departs
     truck.status = "ON ROUTE"
 
     while len(unvisited_list) > 0:
+        # Initialize the shortest_distance and next_address. They will be given values with the first checked address
         shortest_distance = None
         next_address = None
 
         for address in unvisited_list:
             distance = distance_dict[visited_list[-1], address] # From current location to next address
-            if shortest_distance is None:
+            if shortest_distance is None: # 'None' if it's the first address checked in this loop
                 shortest_distance = distance
                 next_address = address
             if distance < shortest_distance:
                 shortest_distance = distance
                 next_address = address
 
-        total_distance += shortest_distance
-        elapsed_time = timedelta(minutes = (shortest_distance / 18) * 60)
+        # 'time' will be stored with the delivered package
+        elapsed_time = timedelta(minutes = (shortest_distance / truck.speed) * 60)
         time += elapsed_time
 
+        # Add the address to the visited_list. On the next loop it will be called as visited_list[-1]
         visited_list.append(next_address)
+
+        # Store the time the package was delivered, and increment the distance in miles that the truck has travelled
         for package in truck.package_list:
             if package.address == next_address:
                 package.deliver(time)
                 truck.travel(shortest_distance)
 
+        # Remove the address from the unvisited_list in order to not visit the same address twice
         unvisited_list.remove(next_address)
-
-    visited_list.remove('4001 South 700 East')
 
     # Return to hub
     distance_to_hub = distance_dict[visited_list[-1], '4001 South 700 East']
     truck.travel(distance_to_hub)
     truck.finish_time = truck.current_time
     truck.status = "IN HUB"
-    print("Truck finish time: ", truck.finish_time)
-    print("ROUTE: ", visited_list)
 
-    return visited_list
+    # print("Truck finish time: ", truck.finish_time)
+    # print("ROUTE: ", visited_list)
 
-'''
-Time Complexity: O(1)
-'''
+
+# Time Complexity: O(1)
 if __name__ == '__main__':
     myHash = ChainingHashTable() # Create a chaining hash table for the packages
     myGraph = create_distance_graph('WGUPS Distance Table.csv') #

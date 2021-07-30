@@ -12,7 +12,6 @@ class UndirectedGraph:
         self.edge_weights[(from_vertex, to_vertex)] = weight
         self.adjacency_list[from_vertex].append(to_vertex)
 
-    # Need this if I decide to not modify the CSV to mirror data
     def add_undirected_edge(self, vertex_a, vertex_b, weight):
         self.add_directed_edge(vertex_a, vertex_b, weight)
         self.add_directed_edge(vertex_b, vertex_a, weight)
