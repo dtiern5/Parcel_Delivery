@@ -13,7 +13,7 @@ def convert_time(time):
         (h, m, s) = time.split(':')
         delta_object = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
         return delta_object
-    except:
+    except ValueError:
         print("Error: Time format is incorrect")
 
 
@@ -68,10 +68,13 @@ def print_single_package_by_time(hash_table, time, package_id):
     # Truck one leaves at 8:00:00, truck two leaves at 9:05:00, and truck three at 11:00:00
     if package.truck == '1':
         start_time = convert_time('8:00:00')
-    if package.truck == '2':
+    elif package.truck == '2':
         start_time = convert_time('9:05:00')
-    if package.truck == '3':
+    elif package.truck == '3':
         start_time = convert_time('10:45:00')
+    else:
+        print("Error: Package is not associated with a valid truck")
+        return
 
     if status_time < start_time:
         package.status = 'AT THE HUB'

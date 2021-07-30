@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+
 class Truck:
 
     def __init__(self, name):
@@ -13,7 +14,6 @@ class Truck:
         self.finish_time = None
         self.status = "IN HUB"
 
-
     def load(self, package):
         """
         Loads a single package to the truck by appending it to the truck's package_list.
@@ -23,8 +23,7 @@ class Truck:
         Time Complexity: O(1)
         """
         self.package_list.append(package)
-        self.route.append(package[1]) # The address
-
+        self.route.append(package[1])  # The address
 
     def remove(self, package):
         """
@@ -35,7 +34,7 @@ class Truck:
         Time Complexity: O(1)
         """
         self.package_list.remove(package)
-        self.route.remove(package[1]) # The address
+        self.route.remove(package[1])  # The address
 
     def depart(self, time):
         """
@@ -60,9 +59,10 @@ class Truck:
         :return: None
         Time Complexity: O(1)
         """
-        self.miles += miles # Keep track of total miles the truck travels
+        self.miles += miles  # Keep track of total miles the truck travels
         added_time = timedelta(minutes=(miles / self.speed) * 60)
         self.current_time += added_time
 
     def __str__(self):
-        return "\nstart time: %s\nmiles: %.2f\nfinish time: %s\nstatus: %s" % (self.start_time, self.miles, self.finish_time, self.status)
+        return "\nstart time: %s\nmiles: %.2f\nfinish time: %s\nstatus: %s" % (
+            self.start_time, self.miles, self.finish_time, self.status)

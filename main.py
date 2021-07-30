@@ -1,16 +1,13 @@
 # Daniel Tierney, Student ID: #001510821
 
 import csv
-from datetime import datetime, timedelta, time
-
+from datetime import timedelta
 from package_time import check_packages_by_truck, convert_time, print_all_packages_at_time, print_single_package_by_time
 from hash_table import ChainingHashTable
 from package import Package
 from truck import Truck
 from undirected_graph import UndirectedGraph
 
-
-# TODO: FINISH DOCUMENT
 
 def main():
     """
@@ -21,24 +18,25 @@ def main():
     :return: None
     Time Complexity for the entire application is O(n^2)
     """
-    myHash = ChainingHashTable()  # Create a chaining hash table for the packages
-    myGraph = create_distance_graph('WGUPS Distance Table.csv')  #
+    my_hash = ChainingHashTable()  # Create a chaining hash table for the packages
+    my_graph = create_distance_graph('WGUPS Distance Table.csv')  #
     # Create truck objects
     truck_one = Truck('Truck 1')
     truck_two = Truck('Truck 2')
     truck_three = Truck('Truck 3')
-    hash_packages('WGUPS Package Data.csv', myHash, truck_one, truck_two, truck_three)
+    hash_packages('WGUPS Package Data.csv', my_hash, truck_one, truck_two, truck_three)
 
     truck_one.depart(convert_time('8:00:00'))
-    greedy_algo(myGraph, truck_one)
+    greedy_algo(my_graph, truck_one)
 
     truck_two.depart(convert_time('9:05:00'))
-    greedy_algo(myGraph, truck_two)
+    greedy_algo(my_graph, truck_two)
 
     truck_three.depart(convert_time('10:45:00'))
-    greedy_algo(myGraph, truck_three)
+    greedy_algo(my_graph, truck_three)
 
-    ui(myHash, myGraph, truck_one, truck_two, truck_three)
+    ui(my_hash, my_graph, truck_one, truck_two, truck_three)
+
 
 def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
     """
@@ -71,7 +69,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         print("\nPackage status: ")
         try:
             print_single_package_by_time(hash_table, package_at_time, package_id)
-        except:
+        except AttributeError:
             print("Package not found")
         print()
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
@@ -82,7 +80,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         try:
             print("\nDisplaying all packages:")
             print_all_packages_at_time(hash_table, time_to_check)
-        except:
+        except TypeError:
             print("Correct format: (HH:MM:SS)")
         print()
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
@@ -105,7 +103,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         time_to_check = input("Time of day to display package statuses (HH:MM:SS): ")
         try:
             check_packages_by_truck(current_truck, time_to_check)
-        except:
+        except TypeError:
             print("Correct format: (HH:MM:SS)")
 
         print()
@@ -134,6 +132,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         print("Exiting...")
         quit()
 
+
 def hash_packages(filename, hash_table, truck_one, truck_two, truck_three):
     """
     Inserts all packages into a hash table by first creating a package object from each line
@@ -153,29 +152,30 @@ def hash_packages(filename, hash_table, truck_one, truck_two, truck_three):
         reader = csv.reader(wguPackages, delimiter=',')
 
         for line in reader:
-                pId = int(line[0])
-                pAddress = line[1]
-                pCity = line[2]
-                pState = line[3]
-                pZip = line[4]
-                pDeadline = line[5]
-                pWeight = line[6]
-                pNotes = line[7]
-                pTruck = line[8]
+            p_id = int(line[0])
+            p_address = line[1]
+            p_city = line[2]
+            p_state = line[3]
+            p_zip = line[4]
+            p_deadline = line[5]
+            p_weight = line[6]
+            p_notes = line[7]
+            p_truck = line[8]
 
-                # Create Package object
-                package = Package(pId, pAddress, pCity, pState, pZip, pDeadline, pWeight, pNotes, pTruck)
+            # Create Package object
+            package = Package(p_id, p_address, p_city, p_state, p_zip, p_deadline, p_weight, p_notes, p_truck)
 
-                # Insert it into the hash table
-                hash_table.insert(pId, package)
+            # Insert it into the hash table
+            hash_table.insert(p_id, package)
 
-                # Load package onto truck (manually for now)
-                load_package(package, truck_one, truck_two, truck_three)
+            # Load package onto truck (manually for now)
+            load_package(package, truck_one, truck_two, truck_three)
+
 
 def load_package(package, truck_one, truck_two, truck_three):
     """
     Loads a package onto the trucks based on the manually added column 9 in the CSV
-    :param package: The package to laod
+    :param package: The package to load
     :param truck_one: First truck
     :param truck_two: Second truck
     :param truck_three: Third truck
@@ -193,6 +193,7 @@ def load_package(package, truck_one, truck_two, truck_three):
         truck_three.package_list.append(package)
         truck_three.route.append(package.address)
 
+
 def create_distance_graph(filename):
     """
     Creates and returns a graph object with addresses as vertices and distances between addresses as edges.
@@ -206,24 +207,25 @@ def create_distance_graph(filename):
     csv_data_list = []
     with open(filename) as f:
         reader = csv.reader(f)
-        next(reader) # Skip header
+        next(reader)  # Skip header
         for line in reader:
             csv_data_list.append(line)
 
     for line in csv_data_list:
-        graph.add_vertex(line[1]) # Vertex is the address
+        graph.add_vertex(line[1])  # Vertex is the address
     for row in range(0, len(csv_data_list)):
-        edges = (csv_data_list[row])[2:len(csv_data_list)+2] # Skip the first two columns
-        for j in range(2, len(edges)): # j is each edge weight
+        edges = (csv_data_list[row])[2:len(csv_data_list) + 2]  # Skip the first two columns
+        for j in range(2, len(edges)):  # j is each edge weight
             # [j-2] gets us the correct row for the second address
-            graph.add_undirected_edge(csv_data_list[row][1], csv_data_list[j-2][1], float(csv_data_list[row][j]))
+            graph.add_undirected_edge(csv_data_list[row][1], csv_data_list[j - 2][1], float(csv_data_list[row][j]))
     return graph
+
 
 def greedy_algo(graph, truck):
     """
     Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
-    the closest destination in miles, drops off the package, and repeats until no destinations are left. At that point, it
-    returns to the hub. The time and miles travelled are updated at each stop along the route.
+    the closest destination in miles, drops off the package, and repeats until no destinations are left.
+    At that point, it returns to the hub. The time and miles travelled are updated at each stop along the route.
 
     :param graph: The graph containing addresses as vertices and distances as edges
     :param truck: The truck whose route is being planned by the greedy algorithm
@@ -242,8 +244,8 @@ def greedy_algo(graph, truck):
     start = '4001 South 700 East'
     visited_list = [start]
 
-    distance_dict = graph.edge_weights # Dictionary {('address1', 'address2'): distance, ('address2', 'address1'): distance)...}
-    time = truck.start_time # Start time is chosen when the truck departs
+    distance_dict = graph.edge_weights  # Dictionary {('address1', 'address2'): distance, ...}
+    time = truck.start_time  # Start time is chosen when the truck departs
     truck.status = "ON ROUTE"
 
     while len(unvisited_list) > 0:
@@ -252,8 +254,8 @@ def greedy_algo(graph, truck):
         next_address = None
 
         for address in unvisited_list:
-            distance = distance_dict[visited_list[-1], address] # From current location to next address
-            if shortest_distance is None: # 'None' if it's the first address checked in this loop
+            distance = distance_dict[visited_list[-1], address]  # From current location to next address
+            if shortest_distance is None:  # 'None' if it's the first address checked in this loop
                 shortest_distance = distance
                 next_address = address
             if distance < shortest_distance:
@@ -261,7 +263,7 @@ def greedy_algo(graph, truck):
                 next_address = address
 
         # 'time' will be stored with the delivered package
-        elapsed_time = timedelta(minutes = (shortest_distance / truck.speed) * 60)
+        elapsed_time = timedelta(minutes=(shortest_distance / truck.speed) * 60)
         time += elapsed_time
 
         # Add the address to the visited_list. On the next loop it will be called as visited_list[-1]

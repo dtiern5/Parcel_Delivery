@@ -1,5 +1,5 @@
+# This class is slightly modified from zyBooks C950: Data Structures and Algorithms II Section 6.6
 
-# Class is slightly modified from Section 6.6 of ZyBooks
 class UndirectedGraph:
 
     def __init__(self):
@@ -43,4 +43,3 @@ class UndirectedGraph:
         """
         self.add_directed_edge(vertex_a, vertex_b, weight)
         self.add_directed_edge(vertex_b, vertex_a, weight)
-

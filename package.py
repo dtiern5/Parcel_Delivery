@@ -26,6 +26,5 @@ class Package:
 
     def __str__(self):
         return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.address, self.city, self.state,
-                                                   self.zipcode, self.deadline, self.weight, self.notes,
-                                                   self.status)
-
+                                                       self.zipcode, self.deadline, self.weight, self.notes,
+                                                       self.status)

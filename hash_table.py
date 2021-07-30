@@ -1,4 +1,5 @@
-# This class is slightly modified from Zybooks C950: Data Structures and Algorithms II Section 7.8
+# This class is slightly modified from zyBooks C950: Data Structures and Algorithms II Section 7.8
+
 class ChainingHashTable:
 
     # Constructor with optional capacity parameter
