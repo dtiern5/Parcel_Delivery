@@ -67,11 +67,11 @@ def print_single_package_by_time(hash_table, time, package_id):
 
     # Truck one leaves at 8:00:00, truck two leaves at 9:05:00, and truck three at 11:00:00
     if package.truck == '1':
-        start_time = convert_time('9:05:00')
+        start_time = convert_time('8:00:00')
     if package.truck == '2':
         start_time = convert_time('9:05:00')
     if package.truck == '3':
-        start_time = convert_time('11:00:00')
+        start_time = convert_time('10:45:00')
 
     if status_time < start_time:
         package.status = 'AT THE HUB'
