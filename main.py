@@ -79,9 +79,9 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '5':
-        print("Truck one has %s packages" % len(truck_one.package_list))
-        print("Truck two has %s packages" % len(truck_two.package_list))
-        print("Truck three has %s packages" % len(truck_three.package_list))
+        print("Truck one: %s packages" % len(truck_one.package_list))
+        print("Truck two: %s packages" % len(truck_two.package_list))
+        print("Truck three: %s packages" % len(truck_three.package_list))
 
         print()
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
@@ -111,20 +111,32 @@ def hash_packages(filename):
                 # Insert it into the hash table
                 myHash.insert(pId, package)
 
-                load_package(package)
+                # Load package onto truck (manually for now)
+                #load_package(package)
 
-def load_package(package):
+                # Group packages for loading the trucks
+                if package.truck == '1':
+                    truck_one.package_list.append(package)
+                    truck_one.route.append(package.address)
+                if package.truck == '2':
+                    truck_two.package_list.append(package)
+                    truck_two.route.append(package.address)
+                if package.truck == '3':
+                    truck_three.package_list.append(package)
+                    truck_three.route.append(package.address)
 
-    # Group packages for loading the trucks
-    if package.truck == '1':
-        truck_one.package_list.append(package)
-        truck_one.route.append(package.address)
-    if package.truck == '2':
-        truck_two.package_list.append(package)
-        truck_two.route.append(package.address)
-    if package.truck == '3':
-        truck_three.package_list.append(package)
-        truck_three.route.append(package.address)
+# def load_package(package):
+#
+#     # Group packages for loading the trucks
+#     if package.truck == '1':
+#         truck_one.package_list.append(package)
+#         truck_one.route.append(package.address)
+#     if package.truck == '2':
+#         truck_two.package_list.append(package)
+#         truck_two.route.append(package.address)
+#     if package.truck == '3':
+#         truck_three.package_list.append(package)
+#         truck_three.route.append(package.address)
 
 
 def create_distance_graph(filename):
@@ -144,7 +156,9 @@ def create_distance_graph(filename):
         for j in range(2, len(edges)): # j is each edge weight
             graph.add_undirected_edge(csv_data_array[row][1], csv_data_array[j-2][1], float(csv_data_array[row][j]))
     return graph
+'''
 
+'''
 def greedy_algo(graph, truck):
     # Create a list of all unvisited locations on the truck's route
     unvisited_list = []
@@ -194,6 +208,7 @@ def greedy_algo(graph, truck):
     truck.travel(distance_to_hub)
     truck.finish_time = truck.current_time
     truck.status = "IN HUB"
+    print("Truck finish time: ", truck.finish_time)
     print("ROUTE: ", visited_list)
 
     return visited_list
@@ -205,9 +220,9 @@ if __name__ == '__main__':
     truck_one = Truck('Truck 1')
     truck_two = Truck('Truck 2')
     truck_three = Truck('Truck 3')
-    hash_packages('WGUPS Package File.csv')
+    hash_packages('WGUPS Package Data.csv')
 
-    truck_one.depart(convert_time('8:00:00'))
+    truck_one.depart(convert_time('9:05:00'))
     greedy_algo(myGraph, truck_one)
 
     truck_two.depart(convert_time('9:05:00'))
@@ -215,5 +230,7 @@ if __name__ == '__main__':
 
     truck_three.depart(convert_time('10:00:00'))
     greedy_algo(myGraph, truck_three)
+
+
 
     ui(myHash, myGraph, truck_one, truck_two, truck_three)

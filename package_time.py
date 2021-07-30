@@ -31,19 +31,19 @@ def print_single_package_by_time(hash_table, time, package_id):
     package = hash_table.search(package_id)
     status_time = convert_time(time)
 
-    if package.preferredTruck == '1':
+    if package.truck == '1':
         start_time = convert_time('8:00:00')
-    if package.preferredTruck == '2':
+    if package.truck == '2':
         start_time = convert_time('9:05:00')
-    if package.preferredTruck == '3':
+    if package.truck == '3':
         start_time = convert_time('10:00:00')
 
     if status_time < start_time:
         package.status = 'AT THE HUB'
     elif status_time < package.delivery_time:
-        package.status = 'EN ROUTE on Truck %s' % package.preferredTruck
+        package.status = 'EN ROUTE on Truck %s' % package.truck
     else:
-        package.status = 'DELIVERED by Truck %s at %s' % (package.preferredTruck, package.delivery_time)
+        package.status = 'DELIVERED by Truck %s at %s' % (package.truck, package.delivery_time)
     print(package)
 
 
