@@ -113,6 +113,7 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
 
     if user_selection == '4':
         # Display the total miles on each truck, as well as the total miles of all trucks
+        print("\nTruck travel distances:")
         print("Truck one miles: %.2f" % truck_one.miles)
         print("Truck two miles: %.2f" % truck_two.miles)
         print("Truck three miles: %.2f" % truck_three.miles)
@@ -131,21 +132,15 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '6':
-        truck_number = input("Which truck? (1, 2, or 3) ")
-        if truck_number == '1':
-            current_truck = truck_one
-        elif truck_number == '2':
-            current_truck = truck_two
-        elif truck_number == '3':
-            current_truck = truck_three
-        else:
-            print("Truck not found")
-            print()
-            ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
-
-        print("Truck finished its route at ", current_truck.finish_time)
+        print("\nTruck one finished its route at ", truck_one.finish_time)
         print("Route:")
-        print(current_truck.route)
+        print(truck_one.route)
+        print("\nTruck two finished its route at ", truck_two.finish_time)
+        print("Route:")
+        print(truck_two.route)
+        print("\nTruck three finished its route at ", truck_three.finish_time)
+        print("Route:")
+        print(truck_three.route)
         print()
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
