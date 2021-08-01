@@ -16,7 +16,8 @@ def main():
     Sets each truck to depart at a given time so data can be pulled in the UI.
     Starts the UI.
     :return: None
-    Time Complexity for the entire application is O(n^2)
+    Time Complexity for the entire application is O(n^2), both the create_distance_graph function
+    and the nearest_neighbor algorithm perform at O(n^2)
     """
     my_hash = ChainingHashTable()  # Create a chaining hash table for the packages
     my_graph = create_distance_graph('WGUPS Distance Table.csv')  #
@@ -27,13 +28,13 @@ def main():
     hash_packages('WGUPS Package Data.csv', my_hash, truck_one, truck_two, truck_three)
 
     truck_one.depart(convert_time('8:00:00'))
-    greedy_algo(my_graph, truck_one)
+    nearest_neighbor(my_graph, truck_one)
 
     truck_two.depart(convert_time('9:05:00'))
-    greedy_algo(my_graph, truck_two)
+    nearest_neighbor(my_graph, truck_two)
 
     truck_three.depart(convert_time('10:45:00'))
-    greedy_algo(my_graph, truck_three)
+    nearest_neighbor(my_graph, truck_three)
 
     ui(my_hash, my_graph, truck_one, truck_two, truck_three)
 
@@ -58,7 +59,8 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
           "3. Package status by truck\n"
           "4. Truck travel distances\n"
           "5. Number of packages in each truck\n"
-          "6. Exit application\n")
+          "6. Truck route and finish time\n"
+          "7. Exit application\n")
 
     user_selection = input("Select a number: ")
 
@@ -129,9 +131,31 @@ def ui(hash_table, distance_graph, truck_one, truck_two, truck_three):
         ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
     if user_selection == '6':
+        truck_number = input("Which truck? (1, 2, or 3) ")
+        if truck_number == '1':
+            current_truck = truck_one
+        elif truck_number == '2':
+            current_truck = truck_two
+        elif truck_number == '3':
+            current_truck = truck_three
+        else:
+            print("Truck not found")
+            print()
+            ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+        print("Truck finished its route at ", current_truck.finish_time)
+        print("Route:")
+        print(current_truck.route)
+        print()
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
+
+    if user_selection == '7':
         print("Exiting...")
         quit()
 
+    else:
+        print("Numbers 1 through 7 are valid inputs\n")
+        ui(hash_table, distance_graph, truck_one, truck_two, truck_three)
 
 def hash_packages(filename, hash_table, truck_one, truck_two, truck_three):
     """
@@ -221,14 +245,15 @@ def create_distance_graph(filename):
     return graph
 
 
-def greedy_algo(graph, truck):
+def nearest_neighbor(graph, truck):
     """
-    Greedy algorithm populates a list of unvisited locations in a truck's route. Starting at the hub, it calculates
-    the closest destination in miles, drops off the package, and repeats until no destinations are left.
-    At that point, it returns to the hub. The time and miles travelled are updated at each stop along the route.
+    The nearest neighbor algorithm populates a list of unvisited locations in a truck's route.
+    Starting at the hub, it calculates the closest destination in miles, drops off the package,
+    and repeats until no destinations are left. At that point, it returns to the hub.
+    The time and miles travelled are updated at each stop along the route.
 
     :param graph: The graph containing addresses as vertices and distances as edges
-    :param truck: The truck whose route is being planned by the greedy algorithm
+    :param truck: The truck whose route is being planned by the nearest neighbor algorithm
     :return: None
     Time complexity: O(n^2) The for loop, as well as the while loop it is nested within, each loop 'n' number of times
     based on the length truck's route
@@ -283,9 +308,6 @@ def greedy_algo(graph, truck):
     truck.travel(distance_to_hub)
     truck.finish_time = truck.current_time
     truck.status = "IN HUB"
-
-    print("Truck finish time: ", truck.finish_time)
-    # print("ROUTE: ", visited_list)
 
 
 if __name__ == '__main__':
